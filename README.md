@@ -1,6 +1,6 @@
 # glossy_tunes
 
-A new Flutter project.
+A new Music player project by flutter.
 
 ## Getting Started
 
