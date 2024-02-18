@@ -3,7 +3,7 @@ import 'package:glossy_tunes/desktop_view/desktop_main_screen.dart';
 import 'package:glossy_tunes/mobile_view/mobile_main_screen.dart';
 import 'package:glossy_tunes/responsive.dart';
 import 'package:glossy_tunes/tablet_view/tablet_main_screen.dart';
-import 'package:glossy_tunes/wave_slider.dart';
+import 'package:glossy_tunes/rrect_slider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double _screenWidth = MediaQuery.of(context).size.width;
+    final double _screenHight = MediaQuery.of(context).size.height;
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -21,16 +23,13 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: /* SliderTheme(
-          data: SliderThemeData(trackShape: RectangularSliderTrackShape()),
-          child: Slider(value: 1, onChanged: (value) {
-            
-          },),
-        ), */
-      WaveSlider(
-          sliderWidth: MediaQuery.of(context).size.width,
-          sliderHight: MediaQuery.of(context).size.height), ),
-     
+        body: Center(
+          child: RRectSlider(
+              sliderWidth: _screenWidth - 20,
+              sliderHight: _screenHight - 20),
+        ),
+      ),
+
       /* home: Responsive(
           mobile: MobileMainScreen(),
           tablet: TabletMainScreen(),
