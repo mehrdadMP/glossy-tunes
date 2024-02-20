@@ -45,11 +45,13 @@ class RRectSlider extends StatefulWidget {
 
 class _RRectSliderState extends State<RRectSlider> {
   Offset offset = Offset.zero;
+  Offset previousoffset = Offset.zero;
   String dragPrecentage = "";
 
   @override
   void initState() {
-    offset = Offset((widget.sliderWidth - 0) / 2, widget.sliderHight - 0);
+    offset = Offset((widget.sliderWidth) / 2, widget.sliderHight);
+    previousoffset = Offset(widget.sliderWidth / 2, widget.sliderHight);
     super.initState();
   }
 
@@ -63,6 +65,7 @@ class _RRectSliderState extends State<RRectSlider> {
         os.dy >= -150 &&
         os.dy <= 70) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(os.dx, 0);
       });
     }
@@ -74,6 +77,7 @@ class _RRectSliderState extends State<RRectSlider> {
         os.dy >= 0 &&
         os.dy <= 50) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(
             os.dx,
             (50 - pow(2500 - pow(os.dx - (widget.sliderWidth - 50), 2), 1 / 2))
@@ -88,6 +92,7 @@ class _RRectSliderState extends State<RRectSlider> {
         os.dy >= 50 &&
         os.dy <= widget.sliderHight - 50) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(widget.sliderWidth, os.dy);
       });
     }
@@ -99,6 +104,7 @@ class _RRectSliderState extends State<RRectSlider> {
         os.dy >= widget.sliderHight - 50 &&
         os.dy <= widget.sliderHight) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(
             os.dx,
             (widget.sliderHight -
@@ -116,6 +122,7 @@ class _RRectSliderState extends State<RRectSlider> {
         os.dy >= widget.sliderHight - 150 &&
         os.dy <= widget.sliderHight + 70) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(os.dx, widget.sliderHight);
       });
     }
@@ -127,6 +134,7 @@ class _RRectSliderState extends State<RRectSlider> {
         os.dy >= widget.sliderHight - 50 &&
         os.dy <= widget.sliderHight - 0) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(
             os.dx,
             (widget.sliderHight - 50 + pow(2500 - pow(50 - os.dx, 2), 1 / 2))
@@ -136,11 +144,12 @@ class _RRectSliderState extends State<RRectSlider> {
 
     //This [else if] is calculations related to the animation of thumb on the
     //left edge of the RRectSlider
-    else if (os.dx >= 0 &&
-        os.dx <= 30 &&
-        os.dy >= 60 &&
-        os.dy <= widget.sliderHight - 70) {
+    else if (os.dx >= -150 &&
+        os.dx <= 70 &&
+        os.dy >= 50 &&
+        os.dy <= widget.sliderHight - 50) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(0, os.dy);
       });
     }
@@ -149,6 +158,7 @@ class _RRectSliderState extends State<RRectSlider> {
     //top-left arc of the RRectSlider
     else if (os.dx >= 0 && os.dx <= 50 && os.dy >= 0 && os.dy <= 50) {
       setState(() {
+        previousoffset = offset;
         offset = Offset(
             os.dx, (50 - pow(2500 - pow(50 - os.dx, 2), 1 / 2)).toDouble());
       });
@@ -163,13 +173,15 @@ class _RRectSliderState extends State<RRectSlider> {
       padding: const EdgeInsets.all(0.0),
       child: Stack(
         children: [
+          Slider(value: value, onChanged: onChanged)
           GestureDetector(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(12.0),
               child: SizedBox(
                 width: widget.sliderWidth - 0,
                 height: widget.sliderHight - 0,
-                child: CustomPaint(painter: RRectSliderPathPainter()),
+                child: CustomPaint(
+                    painter: RRectSliderPathPainter(offset, previousoffset)),
               ),
             ),
             onPanUpdate: _onDragUpdate,
@@ -177,13 +189,34 @@ class _RRectSliderState extends State<RRectSlider> {
           Positioned(
             left: offset.dx,
             top: offset.dy,
-            child: Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: Colors.deepPurple,
-                borderRadius: BorderRadius.circular(10),
-              ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 23,
+                  height: 23,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Color.fromARGB(255, 212, 208, 208), width: 3),
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.deepPurple,
+                          blurRadius: 10,
+                          spreadRadius: 4.5)
+                    ],
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

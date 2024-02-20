@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: RRectSlider(
-              sliderWidth: _screenWidth - 20,
-              sliderHight: _screenHight - 20),
+              sliderWidth: _screenWidth - 200,
+              sliderHight: _screenHight - 650),
         ),
       ),
 
