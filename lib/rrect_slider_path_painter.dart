@@ -3,51 +3,44 @@ import 'package:flutter/material.dart';
 
 class RRectSliderPathPainter extends CustomPainter {
   final Offset _currentOffset;
-  //Offset previousOffset;
+  final _rrectSliderRadius = Radius.circular(50);
+
+  ///This field specifies the style and appearance changes of thumbNail.
   Paint _thumbTailStyle = Paint()
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 8
+    ..strokeWidth = 9.5
     ..strokeCap = StrokeCap.round
     ..color = Color.fromARGB(255, 53, 22, 167);
+
   RRectSliderPathPainter(
     this._currentOffset,
-    /* this.previousOffset */
   );
 
   void _paintRRect(Canvas canvas, Size size) {
     Path path = Path();
 
-    //quadraticBezierTo(x1,y1,x2,y2) add a curved line from current point to
-    //destination point (x2,y2), by control point (x1,y1). points position
-    // should be like the Points of the edges of a triangle. Best case is like
-    //this:
-    //                                           o current point
-    //
-    //
-    //            (x2,y2) o                      o (x1,y1)
-
+    //This path draw the background path of RRectSlider
     path.moveTo(0, 50);
-    path.quadraticBezierTo(0, 0, 50, 0);
+    path.arcToPoint(Offset(50, 0), radius: _rrectSliderRadius);
 
     path.lineTo(size.width - 50, 0);
-    path.quadraticBezierTo(size.width, 0, size.width, 50);
+    path.arcToPoint(Offset(size.width, 50), radius: _rrectSliderRadius);
 
     path.lineTo(size.width, size.height - 50);
-    path.quadraticBezierTo(
-        size.width, size.height, size.width - 50, size.height);
+    path.arcToPoint(Offset(size.width - 50, size.height),
+        radius: _rrectSliderRadius);
 
     path.lineTo(50, size.height);
-    path.quadraticBezierTo(0, size.height, 0, size.height - 50);
+    path.arcToPoint(Offset(0, size.height - 50), radius: _rrectSliderRadius);
 
     path.lineTo(0, 50);
 
-    //List<PathMetric> pm = path.computeMetrics().toList();
     canvas.drawPath(
         path,
         Paint()
           ..color = const Color.fromARGB(255, 212, 208, 208)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 4);
+          ..strokeWidth = 5.3);
   }
 
   void _paintThumbTail(Offset currentOffset, Canvas canvas, Size size) {
@@ -94,7 +87,7 @@ class RRectSliderPathPainter extends CustomPainter {
 
     //Draw top-left Arc of thumbTail
     else if (currentOffset.dx >= 0 &&
-        currentOffset.dx <= 50 &&
+        currentOffset.dx < 50 &&
         currentOffset.dy >= 0 &&
         currentOffset.dy <= 50) {
       canvas.drawLine(Offset(size.width / 2, size.height),
@@ -108,12 +101,14 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      debugPrint('thumbTail offset = $currentOffset');
+      //debugPrint('thumbTail offset = $currentOffset');
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
           pi,
-          asin(currentOffset.dx / 50),
+          asin(currentOffset.dx / 50) + 0.3, //By removing the 0.3, when moving
+          //the thumb, thumb and thumbTail are not synced together and the
+          //thumb moves with some space from thumbTail.
           false,
           _thumbTailStyle);
     }
@@ -133,7 +128,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      debugPrint('thumbTail offset = $currentOffset');
+      //debugPrint('thumbTail offset = $currentOffset');
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -161,7 +156,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      debugPrint('thumbTail offset = $currentOffset');
+      //debugPrint('thumbTail offset = $currentOffset');
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -195,7 +190,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      debugPrint('thumbTail offset = $currentOffset');
+      //debugPrint('thumbTail offset = $currentOffset');
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -302,11 +297,11 @@ class RRectSliderPathPainter extends CustomPainter {
               width: 100,
               height: 100),
           0,
-          pi/2,
+          pi / 2,
           false,
           _thumbTailStyle);
 
-          canvas.drawLine(Offset(size.width-50, size.height),
+      canvas.drawLine(Offset(size.width - 50, size.height),
           Offset(currentOffset.dx, size.height), _thumbTailStyle);
     }
   }
@@ -315,7 +310,6 @@ class RRectSliderPathPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     _paintRRect(canvas, size);
     _paintThumbTail(_currentOffset, canvas, size);
-    //print('pre = $previousOffset , current = $_currentOffset');
   }
 
   @override

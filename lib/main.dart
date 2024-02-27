@@ -25,8 +25,9 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: RRectSlider(
-              sliderWidth: _screenWidth - 200,
-              sliderHight: _screenHight - 650),
+              musicCover: 'assets/images/Saman-Jalili-Tarafdar.jpg',
+              sliderWidth: _screenWidth - 120,
+              sliderHeight: _screenHight - 600),
         ),
       ),
 
