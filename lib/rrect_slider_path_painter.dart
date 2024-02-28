@@ -101,7 +101,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      //debugPrint('thumbTail offset = $currentOffset');
+
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -128,7 +128,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      //debugPrint('thumbTail offset = $currentOffset');
+
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -156,7 +156,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      //debugPrint('thumbTail offset = $currentOffset');
+
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -190,7 +190,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      //debugPrint('thumbTail offset = $currentOffset');
+
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -227,7 +227,6 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      debugPrint('thumbTail offset = $currentOffset');
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),
@@ -272,7 +271,7 @@ class RRectSliderPathPainter extends CustomPainter {
           _thumbTailStyle);
       canvas.drawLine(Offset(0.0, size.height - 50), const Offset(0.0, 50),
           _thumbTailStyle);
-      debugPrint('thumbTail offset = $currentOffset');
+
       canvas.drawArc(
           Rect.fromCenter(
               center: const Offset(50, 50), width: 100, height: 100),

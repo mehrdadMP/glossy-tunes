@@ -12,7 +12,7 @@ class RRectSlider extends StatefulWidget {
   final double sliderHeight;
 
   ///The musicCover is placed in the middle of the slider.
-  String? musicCover;
+  final String? musicCover;
 
   ///Note: To properly display the thumb slider, [sliderWidth] and [sliderHeight]
   ///both must be at least 20  double space apart from the whole screen.
@@ -167,7 +167,6 @@ class _RRectSliderState extends State<RRectSlider> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('ThumbOffset = $offset');
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -245,7 +244,8 @@ class _MusicCover extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.white38,width: 0.5), borderRadius: BorderRadius.circular(35)),
+          border: Border.all(color: Colors.white38, width: 0.5),
+          borderRadius: BorderRadius.circular(35)),
       width: widget.sliderWidth - 45,
       height: widget.sliderHeight - 45,
       child: widget.musicCover != null
