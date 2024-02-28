@@ -16,6 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
     final double _screenHight = MediaQuery.of(context).size.height;
+    print(_screenWidth);
+    print(_screenHight);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -23,12 +25,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: Center(
-          child: RRectSlider(
-              musicCover: 'assets/images/Saman-Jalili-Tarafdar.jpg',
-              sliderWidth: _screenWidth - 120,
-              sliderHeight: _screenHight - 600),
-        ),
+        body: Center(),
       ),
 
       /* home: Responsive(

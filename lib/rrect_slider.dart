@@ -171,69 +171,97 @@ class _RRectSliderState extends State<RRectSlider> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Container(
-          width: widget.sliderWidth - 30,
-          height: widget.sliderHeight - 30,
-          child: widget.musicCover != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(35),
-                  child: Image.asset(
-                    widget.musicCover!,
-                    fit: BoxFit.fill,
-                  ),
-                )
-              : Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                    color: Color.fromARGB(255, 208, 210, 212),
-                  ),
-                ),
-        ),
+        _MusicCover(widget: widget),
         GestureDetector(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: SizedBox(
-              width: widget.sliderWidth - 0,
-              height: widget.sliderHeight - 0,
+              width: widget.sliderWidth,
+              height: widget.sliderHeight,
               child: CustomPaint(painter: RRectSliderPathPainter(offset)),
             ),
           ),
           onPanUpdate: _onDragUpdate,
         ),
-        Positioned(
-          left: offset.dx,
-          top: offset.dy,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 23,
-                height: 23,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color.fromARGB(255, 212, 208, 208), width: 3),
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              Container(
-                width: 12,
-                height: 12,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.deepPurple,
-                        blurRadius: 10,
-                        spreadRadius: 4.5)
-                  ],
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ],
-          ),
-        ),
+        _Thumb(offset: offset),
       ],
+    );
+  }
+}
+
+class _Thumb extends StatelessWidget {
+  const _Thumb({
+    super.key,
+    required this.offset,
+  });
+
+  final Offset offset;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: offset.dx,
+      top: offset.dy,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 23,
+            height: 23,
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Color.fromARGB(255, 212, 208, 208), width: 3),
+              color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.deepPurple,
+                    blurRadius: 10,
+                    spreadRadius: 4.5)
+              ],
+              color: Colors.deepPurple,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MusicCover extends StatelessWidget {
+  const _MusicCover({
+    super.key,
+    required this.widget,
+  });
+
+  final RRectSlider widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: widget.sliderWidth - 30,
+      height: widget.sliderHeight - 30,
+      child: widget.musicCover != null
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(35),
+              child: Image.asset(
+                widget.musicCover!,
+                fit: BoxFit.fill,
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(35),
+                color: Color.fromARGB(255, 208, 210, 212),
+              ),
+            ),
     );
   }
 }
