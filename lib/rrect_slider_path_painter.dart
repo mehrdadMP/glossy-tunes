@@ -8,7 +8,7 @@ class RRectSliderPathPainter extends CustomPainter {
   ///This field specifies the style and appearance changes of thumbNail.
   Paint _thumbTailStyle = Paint()
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 9.5
+    ..strokeWidth = 6.5
     ..strokeCap = StrokeCap.round
     ..color = Color.fromARGB(255, 53, 22, 167);
 
@@ -40,7 +40,7 @@ class RRectSliderPathPainter extends CustomPainter {
         Paint()
           ..color = const Color.fromARGB(255, 212, 208, 208)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 5.3);
+          ..strokeWidth = 5);
   }
 
   void _paintThumbTail(Offset currentOffset, Canvas canvas, Size size) {

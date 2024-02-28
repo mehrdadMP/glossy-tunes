@@ -221,9 +221,7 @@ class _Thumb extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                    color: Colors.deepPurple,
-                    blurRadius: 10,
-                    spreadRadius: 4.5)
+                    color: Colors.deepPurple, blurRadius: 10, spreadRadius: 4.5)
               ],
               color: Colors.deepPurple,
               borderRadius: BorderRadius.circular(10),
@@ -246,8 +244,10 @@ class _MusicCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: widget.sliderWidth - 30,
-      height: widget.sliderHeight - 30,
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.white38,width: 0.5), borderRadius: BorderRadius.circular(35)),
+      width: widget.sliderWidth - 45,
+      height: widget.sliderHeight - 45,
       child: widget.musicCover != null
           ? ClipRRect(
               borderRadius: BorderRadius.circular(35),
