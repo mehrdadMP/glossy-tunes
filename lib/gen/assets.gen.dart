@@ -12,12 +12,34 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/Ali-Yasini-Mirese-Khabara.jpg
+  AssetGenImage get aliYasiniMireseKhabara =>
+      const AssetGenImage('assets/images/Ali-Yasini-Mirese-Khabara.jpg');
+
+  /// File path: assets/images/Armin-Zarei-Shomare-Jadidam.jpg
+  AssetGenImage get arminZareiShomareJadidam =>
+      const AssetGenImage('assets/images/Armin-Zarei-Shomare-Jadidam.jpg');
+
+  /// File path: assets/images/Ashvan-Zare-Zare.jpg
+  AssetGenImage get ashvanZareZare =>
+      const AssetGenImage('assets/images/Ashvan-Zare-Zare.jpg');
+
   /// File path: assets/images/Saman-Jalili-Tarafdar.jpg
   AssetGenImage get samanJaliliTarafdar =>
       const AssetGenImage('assets/images/Saman-Jalili-Tarafdar.jpg');
 
+  /// File path: assets/images/artworks-000352463268-5bfny8-t500x500.jpg
+  AssetGenImage get artworks0003524632685bfny8T500x500 => const AssetGenImage(
+      'assets/images/artworks-000352463268-5bfny8-t500x500.jpg');
+
   /// List of all assets
-  List<AssetGenImage> get values => [samanJaliliTarafdar];
+  List<AssetGenImage> get values => [
+        aliYasiniMireseKhabara,
+        arminZareiShomareJadidam,
+        ashvanZareZare,
+        samanJaliliTarafdar,
+        artworks0003524632685bfny8T500x500
+      ];
 }
 
 class Assets {

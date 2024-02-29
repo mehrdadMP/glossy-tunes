@@ -10,7 +10,7 @@ class RRectSliderPathPainter extends CustomPainter {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 6.5
     ..strokeCap = StrokeCap.round
-    ..color = Color.fromARGB(255, 53, 22, 167);
+    ..color = Color.fromARGB(255, 184, 23, 98);
 
   RRectSliderPathPainter(
     this._currentOffset,

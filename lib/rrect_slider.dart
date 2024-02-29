@@ -220,9 +220,9 @@ class _Thumb extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                    color: Colors.deepPurple, blurRadius: 10, spreadRadius: 4.5)
+                    color: Color.fromARGB(255, 203, 230, 225), blurRadius: 10, spreadRadius: 4.5)
               ],
-              color: Colors.deepPurple,
+              color: Color.fromARGB(255, 165, 49, 78),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
