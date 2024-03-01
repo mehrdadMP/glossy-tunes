@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: AppTheme.themeData(),
-      home: const Responsive(
+      home:  Responsive(
           mobile: MobileMainScreen(),
           tablet: TabletMainScreen(),
           desktop: DesktopMainScreen()),

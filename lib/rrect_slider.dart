@@ -167,6 +167,7 @@ class _RRectSliderState extends State<RRectSlider> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('called!');
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -220,7 +221,9 @@ class _Thumb extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                    color: Color.fromARGB(255, 203, 230, 225), blurRadius: 10, spreadRadius: 4.5)
+                    color: Color.fromARGB(255, 203, 230, 225),
+                    blurRadius: 10,
+                    spreadRadius: 4.5)
               ],
               color: Color.fromARGB(255, 165, 49, 78),
               borderRadius: BorderRadius.circular(10),

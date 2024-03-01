@@ -15,8 +15,7 @@ class XiaomiNote9S extends StatelessWidget {
         width: 392.72727272727275,
         height: 872.7272727272727,
         decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: const [BoxShadow(blurRadius: 50)],
+            border: Border.all(width: 0,color: Colors.black45),
             borderRadius: BorderRadius.circular(30)),
         child: Column(children: [
           const Stack(
