@@ -31,17 +31,19 @@ class Responsive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (isMobile(constraints)) {
-        return mobile;
-      } else if (isTablet(constraints)) {
-        return tablet;
-      } else if (isDesktop(constraints)) {
-        return desktop;
-      } else {
-        throw Exception(
-            "The parent size is not between any of mobile or tablet or desktop!");
-      }
-    });
+    return Scaffold(
+      body: LayoutBuilder(builder: (context, constraints) {
+        if (isMobile(constraints)) {
+          return mobile;
+        } else if (isTablet(constraints)) {
+          return tablet;
+        } else if (isDesktop(constraints)) {
+          return desktop;
+        } else {
+          throw Exception(
+              "The parent size is not between any of mobile or tablet or desktop!");
+        }
+      }),
+    );
   }
 }
