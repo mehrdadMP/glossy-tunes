@@ -2,20 +2,21 @@ import 'dart:ui';
 import 'package:audio_wave/audio_wave.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:glossy_tunes/custom_page_route.dart';
 import 'package:glossy_tunes/gen/assets.gen.dart';
-import 'package:glossy_tunes/mobile_screen.dart';
+import 'package:glossy_tunes/mobile_view/Main%20screen/custom_route_animated.dart';
+import 'package:glossy_tunes/mobile_view/Main%20screen/all_musics_data.dart';
 import 'package:glossy_tunes/rrect_slider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 mixin texts {
   final TextStyle textStyle = TextStyle(color: Colors.white);
+  final OnAudioQuery _audioQuery = OnAudioQuery();
+  bool _hasPermission = false;
 }
 
-enum TransitionMode { up, down, left, right }
-
 class MobileMainScreen extends StatelessWidget with texts {
+  final AllMusicsData musicsData = AllMusicsData();
   MobileMainScreen({super.key});
 
   @override
@@ -37,7 +38,6 @@ class MobileMainScreen extends StatelessWidget with texts {
     Color waveBarColor = Color.fromARGB(242, 228, 59, 129);
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           Container(
@@ -79,7 +79,7 @@ class MobileMainScreen extends StatelessWidget with texts {
 
               //This is the last row in the main screen,its a listview that
               //contain musics.
-              _MusicsList()
+              _MusicsList(musicsData: musicsData)
             ]),
           ),
         ],
@@ -369,16 +369,15 @@ class _PlayingButtons extends StatelessWidget {
 }
 
 class _MusicsList extends StatefulWidget {
-  _MusicsList();
+  final AllMusicsData musicsData;
+  _MusicsList({required this.musicsData});
 
   @override
   State<_MusicsList> createState() => _MusicsListState();
 }
 
-class _MusicsListState extends State<_MusicsList> with texts {
-  final OnAudioQuery _audioQuery = OnAudioQuery();
-  bool _hasPermission = false;
-
+class _MusicsListState extends State<_MusicsList>
+    with texts, SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -418,8 +417,11 @@ class _MusicsListState extends State<_MusicsList> with texts {
                             padding:
                                 MaterialStateProperty.all(EdgeInsets.zero)),
                         onPressed: () {
-                          showGeneralDialog(
-                            transitionDuration: Duration(milliseconds: 750),
+                          Navigator.of(context).push(CustomRouteAnimated(
+                              transitionMode: TransitionMode.slideTransition,
+                              child: AllMusic(musicsData: widget.musicsData)));
+                          /* showGeneralDialog(barrierColor: Colors.transparent,
+                            transitionDuration: Duration(milliseconds: 75),
                             context: context,
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
@@ -428,15 +430,16 @@ class _MusicsListState extends State<_MusicsList> with texts {
                                     secondaryAnimation, child) =>
                                 SlideTransition(
                               position: Tween<Offset>(
-                                      begin: Offset(0, 3), end: Offset(0, 0))
+                                      begin: Offset(0, 100), end: Offset(0, 0))
                                   .animate(animation),
                               child: Dialog(
                                   insetPadding: EdgeInsets.zero,
                                   backgroundColor:
                                       Color.fromARGB(83, 68, 65, 65),
-                                  child: AllMusic()),
+                                  child:
+                                      AllMusic(musicsData: widget.musicsData)),
                             ),
-                          );
+                          ); */
                         },
                         child: Text(
                           'See all',
@@ -447,7 +450,10 @@ class _MusicsListState extends State<_MusicsList> with texts {
             Expanded(
               child: !_hasPermission
                   ? Center(
-                      child: Text('Permission to storage needed'),
+                      child: Text(
+                        'Permission to storage needed',
+                        style: textStyle,
+                      ),
                     )
                   : FutureBuilder<List<SongModel>>(
                       future: _audioQuery.querySongs(
@@ -463,6 +469,7 @@ class _MusicsListState extends State<_MusicsList> with texts {
                             child: Text('No songs found'),
                           );
                         }
+                        widget.musicsData.setAllMusicsData(item.data);
                         return ListView.builder(
                           padding: EdgeInsets.zero,
                           itemCount: item.data!.length,
@@ -507,36 +514,50 @@ class _MusicsListState extends State<_MusicsList> with texts {
                                     SizedBox(
                                       width: 2,
                                     ),
-                                    SizedBox(width: 175,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: 145,
+                                          child: TextScroll(
                                             item.data![index].title,
-                                            style:
-                                                textStyle.copyWith(fontSize: 17),
+                                            pauseBetween: Duration(seconds: 3),
+                                            velocity: Velocity(
+                                                pixelsPerSecond: Offset(20, 0)),
+                                            style: textStyle.copyWith(
+                                                fontSize: 17),
                                           ),
-                                          SizedBox(height: 7),
-                                          Row(mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons
-                                                    .device_phone_portrait,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
-                                              Text(
+                                        ),
+                                        SizedBox(height: 7),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              CupertinoIcons
+                                                  .device_phone_portrait,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                            SizedBox(
+                                              width: 150,
+                                              child: TextScroll(
+                                                pauseBetween: Duration(
+                                                    milliseconds: 2500),
+                                                velocity: Velocity(
+                                                    pixelsPerSecond:
+                                                        Offset(15, 0)),
                                                 item.data![index]
                                                     .displayNameWOExt,
                                                 style: textStyle.copyWith(
                                                     fontSize: 13,
                                                     color: Colors.white54),
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -600,7 +621,8 @@ class _MusicsListState extends State<_MusicsList> with texts {
 }
 
 class AllMusic extends StatelessWidget with texts {
-  AllMusic({super.key});
+  final AllMusicsData musicsData;
+  AllMusic({super.key, required this.musicsData});
 
   @override
   Widget build(BuildContext context) {
@@ -611,117 +633,161 @@ class AllMusic extends StatelessWidget with texts {
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                              color: Color.fromARGB(200, 199, 48, 111))),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 55,
-                              height: 55,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                    Assets.images.values.elementAt(index).path),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Music name ~ must be...',
-                                  style: textStyle.copyWith(fontSize: 17),
-                                ),
-                                SizedBox(
-                                  height: 7,
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.device_phone_portrait,
-                                      color: Colors.white,
-                                      size: 20,
+                child: musicsData.data == null
+                    ? Center(
+                        child: Text(
+                        'There is no music!',
+                        style: textStyle,
+                      ))
+                    : ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: musicsData.musicData!.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(13),
+                                border: Border.all(
+                                    color: Color.fromARGB(200, 199, 48, 111))),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    child: ClipRRect(
+                                      child: QueryArtworkWidget(
+                                          nullArtworkWidget: Container(
+                                            decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 223, 81, 147),
+                                                borderRadius:
+                                                    BorderRadius.circular(9)),
+                                            child: Icon(
+                                              CupertinoIcons.music_note_2,
+                                              color: Colors.white,
+                                            ),
+                                            width: 55,
+                                            height: 55,
+                                          ),
+                                          artworkWidth: 55,
+                                          artworkHeight: 55,
+                                          size: 300,
+                                          artworkBorder:
+                                              BorderRadius.circular(9),
+                                          id: musicsData.data![index].id,
+                                          type: ArtworkType.AUDIO),
                                     ),
-                                    Text(
-                                      'Singer name ~ must be here',
-                                      style: textStyle.copyWith(
-                                          fontSize: 13, color: Colors.white54),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            AudioWave(
-                                animation: false,
-                                width: 35,
-                                height: 30,
-                                spacing: 3,
-                                bars: [
-                                  AudioWaveBar(
-                                      heightFactor: 0.5,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
-                                  AudioWaveBar(
-                                      heightFactor: 1,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
-                                  AudioWaveBar(
-                                      heightFactor: 0.4,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
-                                  AudioWaveBar(
-                                      heightFactor: 0.2,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
-                                  AudioWaveBar(
-                                      heightFactor: 0.35,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
-                                  AudioWaveBar(
-                                      heightFactor: 0.8,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
-                                  AudioWaveBar(
-                                      heightFactor: 0.95,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
-                                  AudioWaveBar(
-                                      heightFactor: 0.1,
-                                      color:
-                                          Color.fromARGB(132, 255, 255, 255)),
+                                  ),
+                                  SizedBox(
+                                    width: 2,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 145,
+                                        child: TextScroll(
+                                          musicsData.data![index].title,
+                                          pauseBetween: Duration(seconds: 3),
+                                          velocity: Velocity(
+                                              pixelsPerSecond: Offset(20, 0)),
+                                          style:
+                                              textStyle.copyWith(fontSize: 17),
+                                        ),
+                                      ),
+                                      SizedBox(height: 7),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            CupertinoIcons
+                                                .device_phone_portrait,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                          SizedBox(
+                                            width: 150,
+                                            child: TextScroll(
+                                              musicsData.data![index]
+                                                  .displayNameWOExt,
+                                              pauseBetween:
+                                                  Duration(milliseconds: 2500),
+                                              velocity: Velocity(
+                                                  pixelsPerSecond:
+                                                      Offset(15, 0)),
+                                              style: textStyle.copyWith(
+                                                  fontSize: 13,
+                                                  color: Colors.white54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  AudioWave(
+                                      animation: false,
+                                      width: 35,
+                                      height: 30,
+                                      spacing: 3,
+                                      bars: [
+                                        AudioWaveBar(
+                                            heightFactor: 0.5,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                        AudioWaveBar(
+                                            heightFactor: 1,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                        AudioWaveBar(
+                                            heightFactor: 0.4,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                        AudioWaveBar(
+                                            heightFactor: 0.2,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                        AudioWaveBar(
+                                            heightFactor: 0.35,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                        AudioWaveBar(
+                                            heightFactor: 0.8,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                        AudioWaveBar(
+                                            heightFactor: 0.95,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                        AudioWaveBar(
+                                            heightFactor: 0.1,
+                                            color: Color.fromARGB(
+                                                132, 255, 255, 255)),
+                                      ]),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        CupertinoIcons.ellipsis_vertical,
+                                        color: Colors.white,
+                                      ))
                                 ]),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  CupertinoIcons.ellipsis_vertical,
-                                  color: Colors.white,
-                                ))
-                          ]),
-                    ),
-                  ),
-                ),
+                          ),
+                        ),
+                      ),
               ),
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).pop(CustomPageRoute(
-                        child: AllMusic(),
-                        transitionMode: TransitionMode.down));
+                    Navigator.of(context).pop();
                   },
-                  icon: Icon(CupertinoIcons.chevron_down))
+                  icon: Icon(
+                    CupertinoIcons.chevron_down,
+                    color: Colors.white,
+                  ))
             ],
           ),
         ),
