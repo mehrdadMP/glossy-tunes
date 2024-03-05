@@ -8,7 +8,7 @@ class CustomRouteAnimated extends ModalRoute<void> {
   CustomRouteAnimated({required this.child, required this.transitionMode});
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 1000);
+  Duration get transitionDuration => Duration(milliseconds: 600);
 
   @override
   bool get opaque => false;
@@ -17,7 +17,7 @@ class CustomRouteAnimated extends ModalRoute<void> {
   bool get barrierDismissible => false;
 
   @override
-  Color get barrierColor => Color.fromARGB(190, 14, 14, 14).withOpacity(0.50);
+  Color get barrierColor => Color.fromARGB(15, 255, 255, 255).withOpacity(0.1);
 
   @override
   String? get barrierLabel => null;
@@ -26,7 +26,7 @@ class CustomRouteAnimated extends ModalRoute<void> {
   bool get maintainState => true;
 
   @override
-  Widget buildPage(
+  Widget buildPage (
     BuildContext context,
     Animation<double> animation,
     Animation<double> secondaryAnimation,

@@ -1,13 +1,19 @@
 import 'package:on_audio_query/on_audio_query.dart';
 
 class AllMusicsData {
-  List<SongModel>? data;
+  List<SongModel>? _data;
+  SongModel? _selectedMusicData;
 
-  setAllMusicsData(List<SongModel>? data) {
-    this.data = data;
+  void setAllMusicsData(List<SongModel>? data) {
+    _data = data;
+    _selectedMusicData;
   }
 
-  List<SongModel>? get musicData {
-    return data;
+  void setSelectedMusicData(SongModel selectedMusicData) {
+    _selectedMusicData = selectedMusicData;
   }
+
+  List<SongModel>? get allMusicsData => _data;
+  
+  SongModel? get selectedMusicData => _selectedMusicData;
 }

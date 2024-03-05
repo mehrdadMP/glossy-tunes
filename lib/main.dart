@@ -21,10 +21,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: AppTheme.themeData(),
-        home: Responsive(
+        home: MobileMainScreen()
+        /* Responsive(
           desktop: DesktopMainScreen(),
           mobile: MobileMainScreen(),
           tablet: TabletMainScreen(),
-        ));
+        ) */);
   }
 }
