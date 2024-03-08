@@ -5,9 +5,10 @@ import 'package:audio_wave/audio_wave.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glossy_tunes/gen/assets.gen.dart';
-import 'package:glossy_tunes/mobile_view/Main%20screen/colorful_background.dart';
-import 'package:glossy_tunes/mobile_view/Main%20screen/custom_route_animated.dart';
-import 'package:glossy_tunes/mobile_view/Main%20screen/all_musics_data.dart';
+import 'package:glossy_tunes/mobile_screen.dart';
+import 'package:glossy_tunes/mobile_view/Main_screen/colorful_background.dart';
+import 'package:glossy_tunes/mobile_view/Main_screen/custom_route_animated.dart';
+import 'package:glossy_tunes/mobile_view/Main_screen/all_musics_data.dart';
 import 'package:glossy_tunes/rrect_slider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:text_scroll/text_scroll.dart';
@@ -27,7 +28,7 @@ class MobileMainScreen extends StatelessWidget with texts {
   @override
   Widget build(BuildContext context) {
     //This is the size of device screen.
-    final Size ScreenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery.of(context).size;
 
     //This is the path of musicCover, this will set on blured background and
     // RRectSlider musicCover field.
@@ -48,37 +49,42 @@ class MobileMainScreen extends StatelessWidget with texts {
         children: [
           _BackGroundImage(
               musicCoverPath: musicCoverPath,
-              screenSize: ScreenSize,
+              screenSize: screenSize,
               musicData: musicsData),
           _BackgroundBlurFilter(),
-          SafeArea(
-            child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: SizedBox(
-                height: ScreenSize.height,
-                child: Column(children: [
-                  //BackButton, Listening now, more button are here.
-                  _FirstRow(buttonStyle: buttonStyle),
+          SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: SizedBox(
+              height: screenSize.height,
+              child: SafeArea(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //BackButton, Listening now, more button are here.
+                      _FirstRow(buttonStyle: buttonStyle),
 
-                  //MusicSlider and the musicCover in the middle of it are here.
-                  _MusicSlider(musicCoverPath: musicCoverPath),
+                      //MusicSlider and the musicCover in the middle of it are here.
+                      _MusicSlider(
+                          musicCoverPath: musicCoverPath,
+                          screenSize: screenSize),
 
-                  //MusicName, lyricButton and like button are here.
-                  _MusicInfo(),
+                      //MusicName, lyricButton and like button are here.
+                      _MusicInfo(),
 
-                  //spend time, Wavebar and musicDuration are here.
-                  _WaveBar(waveBarColor: waveBarColor),
+                      //spend time, Wavebar and musicDuration are here.
+                      _WaveBar(waveBarColor: waveBarColor),
 
-                  //Play, backward, forward, shuffle and repeat buttons are here.
-                  _PlayingButtons(),
-                  SizedBox(
-                    height: 10,
-                  ),
+                      //Play, backward, forward, shuffle and repeat buttons are here.
+                      _PlayingButtons(),
+                      SizedBox(
+                        height: 10,
+                      ),
 
-                  //This is the last row in the main screen,its a listview that
-                  //contain musics.
-                  _MusicsList(musicsData: musicsData)
-                ]),
+                      //This is the last row in the main screen,its a listview that
+                      //contain musics.
+                      _MusicsList(
+                          musicsData: musicsData, screenSize: screenSize)
+                    ]),
               ),
             ),
           ),
@@ -178,46 +184,46 @@ class _BackGroundImageState extends State<_BackGroundImage>
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: SlideTransition(
-        position: _animationVertically,
-        child: SingleChildScrollView(
-          child: SlideTransition(
-            position: _animationHorizontally,
-            child: Transform.scale(
-              scale: 1.5,
-              child: Container(
-                width: widget.screenSize.width,
-                height: widget.screenSize.height,
-                child: widget.musicData.selectedMusicData == null
-                    ? ColorfulBackground(
-                        backgroundColors: backgroundColors,
-                        duration: Duration(milliseconds: 3900),
-                        width: widget.screenSize.width,
-                        height: widget.screenSize.height,
-                      )
-                    : QueryArtworkWidget(
-                        nullArtworkWidget: Container(
-                          decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.circular(9)),
-                          child: Icon(
-                            CupertinoIcons.music_note_2,
-                            color: Colors.white,
+      child: widget.musicData.selectedMusicData == null
+          ? ColorfulBackground(
+              backgroundColors: backgroundColors,
+              duration: Duration(milliseconds: 3900),
+              width: widget.screenSize.width,
+              height: widget.screenSize.height,
+            )
+          : SlideTransition(
+              position: _animationVertically,
+              child: SingleChildScrollView(
+                child: SlideTransition(
+                  position: _animationHorizontally,
+                  child: Transform.scale(
+                    scale: 1.5,
+                    child: Container(
+                      width: widget.screenSize.width,
+                      height: widget.screenSize.height,
+                      child: QueryArtworkWidget(
+                          nullArtworkWidget: Container(
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(9)),
+                            child: Icon(
+                              CupertinoIcons.music_note_2,
+                              color: Colors.white,
+                            ),
+                            width: 55,
+                            height: 55,
                           ),
-                          width: 55,
-                          height: 55,
-                        ),
-                        artworkWidth: 55,
-                        artworkHeight: 55,
-                        size: 300,
-                        artworkBorder: BorderRadius.circular(9),
-                        id: widget.musicData.selectedMusicData!.id,
-                        type: ArtworkType.AUDIO),
+                          artworkWidth: 55,
+                          artworkHeight: 55,
+                          size: 300,
+                          artworkBorder: BorderRadius.circular(9),
+                          id: widget.musicData.selectedMusicData!.id,
+                          type: ArtworkType.AUDIO),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -263,17 +269,25 @@ class _FirstRow extends StatelessWidget with texts {
 }
 
 class _MusicSlider extends StatelessWidget {
+  final String musicCoverPath;
+  final Size screenSize;
+
   const _MusicSlider({
     required this.musicCoverPath,
+    required this.screenSize,
   });
-
-  final String musicCoverPath;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: RRectSlider(
-          musicCover: musicCoverPath, sliderWidth: 265, sliderHeight: 265),
+    return Expanded(
+      child: SizedBox(
+        width: screenSize.width - 100,
+        height: screenSize.height - 550,
+        child: FittedBox(
+          child: RRectSlider(
+              musicCover: musicCoverPath, sliderWidth: 450, sliderHeight: 450),
+        ),
+      ),
     );
   }
 }
@@ -504,7 +518,8 @@ class _PlayingButtons extends StatelessWidget {
 
 class _MusicsList extends StatefulWidget {
   final AllMusicsData musicsData;
-  const _MusicsList({required this.musicsData});
+  final Size screenSize;
+  const _MusicsList({required this.musicsData, required this.screenSize});
 
   @override
   State<_MusicsList> createState() => _MusicsListState();
@@ -529,8 +544,11 @@ class _MusicsListState extends State<_MusicsList>
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
       child: Container(
+        width: widget.screenSize.width,
+        height: 180,
+        margin: EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(25), topRight: Radius.circular(25)),

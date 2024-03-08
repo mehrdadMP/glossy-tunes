@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glossy_tunes/desktop_view/desktop_main_screen.dart';
-import 'package:glossy_tunes/mobile_view/Main%20screen/mobile_main_screen.dart';
+import 'package:glossy_tunes/mobile_view/Main_screen/mobile_main_screen.dart';
 import 'package:glossy_tunes/responsive.dart';
 import 'package:glossy_tunes/tablet_view/tablet_main_screen.dart';
 import 'package:glossy_tunes/theme.dart';
