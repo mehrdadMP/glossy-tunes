@@ -2,11 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class XiaomiNote9S extends StatelessWidget {
-  final Widget contents;
-  const XiaomiNote9S({
+  final Widget home;
+  final bool debugShowCheckedModeBanner;
+  final bool enableStatusBar;
+
+  XiaomiNote9S({
     super.key,
-    required this.contents,
-  });
+    required this.home,
+    required this.debugShowCheckedModeBanner,
+    required this.enableStatusBar,
+  }) {
+    ;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,77 +22,62 @@ class XiaomiNote9S extends StatelessWidget {
         width: 392.72727272727275,
         height: 872.7272727272727,
         decoration: BoxDecoration(
-            border: Border.all(width: 0,color: Colors.black45),
-            borderRadius: BorderRadius.circular(30)),
-        child: Column(children: [
-          const Stack(
-            alignment: Alignment.center,
-            children: [
-              _StatusBar(),
-              _PhoneFrontCamera(),
-              _StatusBarShadow(),
-            ],
-          ),
-          _Contents(contents: contents),
-        ]),
-      ),
-    );
-  }
-}
-
-class XiaomiNote9S2 extends StatelessWidget {
-  final Widget contents;
-  const XiaomiNote9S2({
-    super.key,
-    required this.contents,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 100.72727272727275,
-        height: 872.7272727272727,
-        decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: const [BoxShadow(blurRadius: 50)],
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 35,
+                spreadRadius: 5,
+              )
+            ],
             borderRadius: BorderRadius.circular(30)),
         child: Column(children: [
-          const Stack(
-            alignment: Alignment.center,
-            children: [
-              _StatusBar(),
-              _PhoneFrontCamera(),
-              _StatusBarShadow(),
-            ],
+          enableStatusBar
+              ? const Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    _StatusBar(),
+                    _PhoneFrontCamera(),
+                    _StatusBarShadow(),
+                  ],
+                )
+              : Container(),
+          _Home(
+            home: home,
+            enableStatusBar: enableStatusBar,
           ),
-          _Contents(contents: contents),
         ]),
       ),
     );
   }
 }
 
-class _Contents extends StatelessWidget {
-  const _Contents({
-    required this.contents,
+class _Home extends StatelessWidget {
+  final bool enableStatusBar;
+  const _Home({
+    required this.home,
+    required this.enableStatusBar,
   });
 
-  final Widget contents;
+  final Widget home;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30))),
+        decoration: BoxDecoration(
+            borderRadius: enableStatusBar
+                ? BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30))
+                : BorderRadius.circular(30)),
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30)),
-          child: contents,
+          borderRadius: enableStatusBar
+              ? BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30))
+              : BorderRadius.circular(30),
+          child: MaterialApp(
+              debugShowCheckedModeBanner: debugDisableShadows, home: home),
         ),
       ),
     );
@@ -173,5 +165,15 @@ class _PhoneFrontCamera extends StatelessWidget {
             borderRadius: BorderRadius.circular(50)),
       ),
     );
+  }
+}
+
+class ScreenSize {
+  static Size _xiaomiNote9S = Size.zero;
+
+  static Size setXiaomiNote9sScreenSize({bool enableStatusBar = false}) {
+    _xiaomiNote9S = Size(392.72727272727275,
+        enableStatusBar ? (872.7272727272727 - 35) : 872.7272727272727);
+    return _xiaomiNote9S;
   }
 }

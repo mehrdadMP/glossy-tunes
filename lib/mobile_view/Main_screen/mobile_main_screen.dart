@@ -23,12 +23,12 @@ mixin texts {
 
 class MobileMainScreen extends StatelessWidget with texts {
   final AllMusicsData musicsData = AllMusicsData();
-  MobileMainScreen({super.key});
+  final Size screenSize;
+  MobileMainScreen({super.key, required this.screenSize});
 
   @override
   Widget build(BuildContext context) {
     //This is the size of device screen.
-    final Size screenSize = MediaQuery.of(context).size;
 
     //This is the path of musicCover, this will set on blured background and
     // RRectSlider musicCover field.
@@ -598,7 +598,10 @@ class _MusicsListState extends State<_MusicsList>
                         }
                         if (item.data!.isEmpty) {
                           return Center(
-                            child: Text('No songs found'),
+                            child: Text(
+                              'No songs found',
+                              style: textStyle,
+                            ),
                           );
                         }
                         widget.musicsData.setAllMusicsData(item.data);
