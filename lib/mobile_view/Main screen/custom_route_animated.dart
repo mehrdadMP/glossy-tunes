@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 enum TransitionMode { slideTransition, fadeTransition }
 
-class CustomRouteAnimated extends ModalRoute<void> {
+class CustomRouteAnimated extends ModalRoute {
   Widget child;
   TransitionMode transitionMode;
-  CustomRouteAnimated({required this.child, required this.transitionMode});
+  CustomRouteAnimated({required this.child, required this.transitionMode,});
 
   @override
   Duration get transitionDuration => Duration(milliseconds: 600);
@@ -59,7 +59,7 @@ class CustomRouteAnimated extends ModalRoute<void> {
       );
     } else {
       return SlideTransition(
-        position: Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0))
+        position: Tween<Offset>(begin: Offset(0, 3), end: Offset(0, 0))
             .animate(animation),
         child: child,
       );

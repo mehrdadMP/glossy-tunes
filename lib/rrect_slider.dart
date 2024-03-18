@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:glossy_tunes/mobile_view/Main%20screen/colorful_background.dart';
 import 'package:glossy_tunes/rrect_slider_path_painter.dart';
 import 'dart:math';
 
-class RRectSlider extends StatefulWidget {
+import 'package:on_audio_query/on_audio_query.dart';
+
+class RRectSliderComponent extends StatelessWidget {
   ///The shape of the slide is rectangular. This field specifies the length of
   ///width of the rectangle.
   final double sliderWidth;
@@ -11,8 +14,10 @@ class RRectSlider extends StatefulWidget {
   ///height of the rectangle.
   final double sliderHeight;
 
-  ///The musicCover is placed in the middle of the slider.
-  final String? musicCover;
+  ///The musicCover will get by [music.id]  and will be placed in the middle of
+  ///the slider.
+
+  final SongModel? music;
 
   ///Note: To properly display the thumb slider, [sliderWidth] and [sliderHeight]
   ///both must be at least 20  double space apart from the whole screen.
@@ -39,8 +44,30 @@ class RRectSlider extends StatefulWidget {
   ///  );
   ///}
   /// ```
+
+  const RRectSliderComponent(
+      {super.key,
+      required this.sliderWidth,
+      required this.sliderHeight,
+      required this.music});
+  @override
+  Widget build(BuildContext context) {
+    return Stack(alignment: Alignment.center, children: [
+      _MusicCover(
+        music: music,
+        sliderWidth: sliderWidth,
+        sliderHeight: sliderHeight,
+      ),
+      RRectSlider(sliderWidth: sliderWidth, sliderHeight: sliderHeight),
+    ]);
+  }
+}
+
+class RRectSlider extends StatefulWidget {
+  final double sliderWidth;
+  final double sliderHeight;
+
   RRectSlider({
-    this.musicCover,
     super.key,
     required this.sliderWidth,
     required this.sliderHeight,
@@ -171,7 +198,6 @@ class _RRectSliderState extends State<RRectSlider> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        _MusicCover(widget: widget),
         GestureDetector(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -236,12 +262,28 @@ class _Thumb extends StatelessWidget {
 }
 
 class _MusicCover extends StatelessWidget {
-  const _MusicCover({
+  final SongModel? music;
+  final double sliderWidth;
+  final double sliderHeight;
+
+  _MusicCover({
     super.key,
-    required this.widget,
+    required this.sliderWidth,
+    required this.sliderHeight,
+    required this.music,
   });
 
-  final RRectSlider widget;
+  List<Color> backgroundColors = [
+    Colors.black54,
+    Colors.orange.shade900,
+    Colors.brown.shade900,
+    Colors.red.shade900,
+    Colors.grey.shade900,
+    Colors.green.shade900,
+    Colors.teal.shade900,
+    Colors.yellow.shade900,
+    Colors.blue.shade900
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -249,20 +291,25 @@ class _MusicCover extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border.all(color: Colors.white38, width: 0.5),
           borderRadius: BorderRadius.circular(35)),
-      width: widget.sliderWidth - 45,
-      height: widget.sliderHeight - 45,
-      child: widget.musicCover != null
+      width: sliderWidth - 45,
+      height: sliderHeight - 45,
+      child: music != null
           ? ClipRRect(
               borderRadius: BorderRadius.circular(35),
-              child: Image.asset(
-                widget.musicCover!,
-                fit: BoxFit.fill,
-              ),
+              child: QueryArtworkWidget(
+                  nullArtworkWidget: ColorfulBackground(
+                    backgroundColors: backgroundColors,
+                    duration: Duration(milliseconds: 3900),
+                  ),
+                  artworkFit: BoxFit.fill,
+                  size: 1000,
+                  artworkBorder: BorderRadius.circular(9),
+                  id: music!.id,
+                  type: ArtworkType.AUDIO),
             )
           : Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(35),
-                color: Color.fromARGB(255, 208, 210, 212),
               ),
             ),
     );

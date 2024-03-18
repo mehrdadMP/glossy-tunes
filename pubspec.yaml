@@ -39,6 +39,9 @@ dependencies:
   audio_wave: ^0.1.5
   on_audio_query: ^2.9.0
   text_scroll: ^0.2.0
+  equatable: ^2.0.5
+  just_audio: ^0.9.36
+
 
 dev_dependencies:
   flutter_test:
