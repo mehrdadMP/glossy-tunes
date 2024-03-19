@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:audio_wave/audio_wave.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:glossy_tunes/common/common_mixin.dart';
 import 'package:glossy_tunes/gen/assets.gen.dart';
 import 'package:glossy_tunes/mobile_view/All%20music%20screen/all_musics.dart';
@@ -16,7 +17,6 @@ import 'package:text_scroll/text_scroll.dart';
 SongModel? music;
 
 class MobileMainScreen extends StatefulWidget {
-  final ValueNotifier<bool> popup = ValueNotifier<bool>(false);
   final Size screenSize;
   MobileMainScreen({super.key, required this.screenSize});
 
@@ -26,6 +26,7 @@ class MobileMainScreen extends StatefulWidget {
 
 class _MobileMainScreenState extends State<MobileMainScreen>
     with common, WidgetsBindingObserver {
+  ValueNotifier<bool> isMusicSelected = ValueNotifier<bool>(false);
   final player = AudioPlayer();
   AppLifecycleState? _notification;
   bool _isPaused = false;
@@ -61,6 +62,14 @@ class _MobileMainScreenState extends State<MobileMainScreen>
     hasPermission ? setState(() {}) : null;
   }
 
+  void playMusic() async {
+    if (music != null) {
+      await player
+          .setAudioSource(AudioSource.uri(Uri.parse(music!.uri as String)));
+      player.play();
+    }
+  }
+
   final AllMusicsData musicsData = AllMusicsData();
 
   @override
@@ -75,12 +84,19 @@ class _MobileMainScreenState extends State<MobileMainScreen>
     Color waveBarColor = Color.fromARGB(242, 228, 59, 129);
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          _BackGroundImage(
-              screenSize: widget.screenSize,
-              musicData: musicsData,
-              music: music),
+          ValueListenableBuilder<bool>(
+            valueListenable: isMusicSelected,
+            builder: (BuildContext context, bool value, Widget? child) {
+              isMusicSelected.value = false;
+              return _BackGroundImage(
+                  screenSize: widget.screenSize,
+                  musicData: musicsData,
+                  music: music);
+            },
+          ),
           _BackgroundBlurFilter(),
           SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
@@ -94,14 +110,34 @@ class _MobileMainScreenState extends State<MobileMainScreen>
                       _FirstRow(buttonStyle: buttonStyle),
 
                       //MusicSlider and the musicCover in the middle of it are here.
-                      _MusicSlider(
-                          musicCoverId: music, screenSize: widget.screenSize),
+                      ValueListenableBuilder<bool>(
+                        valueListenable: isMusicSelected,
+                        builder: (BuildContext context, value, Widget? child) {
+                          isMusicSelected.value = false;
+                          return _MusicSlider(
+                              musicCoverId: music,
+                              screenSize: widget.screenSize);
+                        },
+                      ),
 
                       //MusicName, lyricButton and like button are here.
-                      _MusicInfo(music: music),
+                      ValueListenableBuilder<bool>(
+                        valueListenable: isMusicSelected,
+                        builder:
+                            (BuildContext context, bool value, Widget? child) {
+                          return _MusicInfo(music: music);
+                        },
+                      ),
 
                       //spend time, Wavebar and musicDuration are here.
-                      _WaveBar(waveBarColor: waveBarColor, music: music),
+                      ValueListenableBuilder<bool>(
+                        valueListenable: isMusicSelected,
+                        builder:
+                            (BuildContext context, bool value, Widget? child) {
+                          return _WaveBar(
+                              waveBarColor: waveBarColor, music: music);
+                        },
+                      ),
 
                       //Play, backward, forward, shuffle and repeat buttons are here.
                       _PlayingButtons(player: player),
@@ -148,9 +184,9 @@ class _MobileMainScreenState extends State<MobileMainScreen>
                                                       musicsData: musicsData),
                                                 )).then((value) {
                                               if (value != null) {
-                                                setState(() {
-                                                  music = value;
-                                                });
+                                                music = value;
+                                                isMusicSelected.value = true;
+                                                playMusic();
                                               }
                                               return music;
                                             });
@@ -200,9 +236,11 @@ class _MobileMainScreenState extends State<MobileMainScreen>
                                                   const EdgeInsets.fromLTRB(
                                                       15, 8, 15, 8),
                                               child: InkWell(
-                                                onTap: () => setState(() {
+                                                onTap: () {
+                                                  isMusicSelected.value = true;
                                                   music = item.data![index];
-                                                }),
+                                                  playMusic();
+                                                },
                                                 child: Container(
                                                   padding: EdgeInsets.fromLTRB(
                                                       10, 10, 0, 10),
@@ -530,9 +568,15 @@ class _BackGroundImageState extends State<_BackGroundImage>
       curve: Curves.linear,
     ),
   );
+
+  late final AnimationController _fadeInMusicCoverController =
+      AnimationController(vsync: this, duration: Duration(seconds: 3));
+  late final Animation<double> _fadeInMusicCoverAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(_fadeInMusicCoverController);
   @override
   void dispose() {
     _animationHorizontallyController.dispose();
+    _fadeInMusicCoverController.dispose();
     super.dispose();
   }
 
@@ -544,43 +588,51 @@ class _BackGroundImageState extends State<_BackGroundImage>
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: widget.music == null
-          ? ColorfulBackground(
-              backgroundColors: backgroundColors,
-              duration: Duration(milliseconds: 3900),
-              width: widget.screenSize.width,
-              height: widget.screenSize.height,
-            )
-          : SlideTransition(
-              position: _animationVertically,
-              child: SingleChildScrollView(
+    _fadeInMusicCoverController.forward();
+    return /* SingleChildScrollView(
+      child:  */
+        widget.music == null
+            ? FadeTransition(
+                opacity: _fadeInMusicCoverAnimation,
+                child: ColorfulBackground(
+                  backgroundColors: backgroundColors,
+                  duration: Duration(milliseconds: 3900),
+                  width: widget.screenSize.width,
+                  height: widget.screenSize.height,
+                ),
+              )
+            : FadeTransition(
+                opacity: _fadeInMusicCoverAnimation,
                 child: SlideTransition(
-                  position: _animationHorizontally,
-                  child: Transform.scale(
-                    scale: 1.5,
-                    child: Container(
-                      width: widget.screenSize.width,
-                      height: widget.screenSize.height,
-                      child: QueryArtworkWidget(
-                          nullArtworkWidget: ColorfulBackground(
-                            backgroundColors: backgroundColors,
-                            duration: Duration(milliseconds: 3900),
-                            width: widget.screenSize.width,
-                            height: widget.screenSize.height,
-                          ),
-                          artworkWidth: 55,
-                          artworkHeight: 55,
-                          size: 300,
-                          artworkBorder: BorderRadius.circular(9),
-                          id: widget.music!.id,
-                          type: ArtworkType.AUDIO),
+                  position: _animationVertically,
+                  child: /* SingleChildScrollView(
+                      child:  */
+                      SlideTransition(
+                    position: _animationHorizontally,
+                    child: Transform.scale(
+                      scale: 1.5,
+                      child: Container(
+                        width: widget.screenSize.width,
+                        height: widget.screenSize.height,
+                        child: QueryArtworkWidget(
+                            nullArtworkWidget: ColorfulBackground(
+                              backgroundColors: backgroundColors,
+                              duration: Duration(milliseconds: 3900),
+                              width: widget.screenSize.width,
+                              height: widget.screenSize.height,
+                            ),
+                            artworkWidth: 55,
+                            artworkHeight: 55,
+                            size: 300,
+                            artworkBorder: BorderRadius.circular(9),
+                            id: widget.music!.id,
+                            type: ArtworkType.AUDIO),
+                      ),
                     ),
                   ),
+                  /*  ), */
                 ),
-              ),
-            ),
-    );
+              ) /* ) */;
   }
 }
 
@@ -881,11 +933,7 @@ class _PlayingButtons extends StatelessWidget {
                 IconButton(
                   iconSize: 40,
                   onPressed: () async {
-                    if (music != null) {
-                      await player.setAudioSource(
-                          AudioSource.uri(Uri.parse(music!.uri as String)));
-                      player.play();
-                    }
+                    playMusic();
                   },
                   icon: Padding(
                     padding: const EdgeInsets.all(6.0),
@@ -914,5 +962,13 @@ class _PlayingButtons extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void playMusic() async {
+    if (music != null) {
+      await player
+          .setAudioSource(AudioSource.uri(Uri.parse(music!.uri as String)));
+      player.play();
+    }
   }
 }

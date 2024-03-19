@@ -26,15 +26,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: AppTheme.themeData(),
-      home: Scaffold(
-        body: Responsive(
+      home: /* Scaffold(
+        body: */ Responsive(
           mobile: MobileMainScreen(screenSize: screenSize),
 
           // ),
           tablet: TabletMainScreen(),
           desktop: DesktopMainScreen(),
         ),
-      ),
+      //),
     );
   }
 }
